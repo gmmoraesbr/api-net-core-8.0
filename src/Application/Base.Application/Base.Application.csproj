@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Base.Domain\Base.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.6.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Auth\Queries\" />
+    <Folder Include="Features\Products\Queries\" />
+    <Folder Include="Features\Products\Requests\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

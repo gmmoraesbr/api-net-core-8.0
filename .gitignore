@@ -1,0 +1,72 @@
+## Compilação
+bin/
+obj/
+out/
+project.lock.json
+project.fragment.lock.json
+*.nuspec
+*.user
+*.suo
+*.cache
+*.log
+*.vspscc
+*.vssscc
+*.pdb
+
+## Build temporários
+*.tmp
+*.temp
+*.tmp.*
+*.log
+
+## VS Code
+.vscode/
+
+## Rider
+.idea/
+
+## Visual Studio
+.vs/
+*.csproj.user
+*.dbmdl
+*.sln.docstates
+
+## Dotnet CLI
+artifacts/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.testadapter.dll
+*.tests.dll
+
+## Secrets
+secrets.json
+
+## Pacotes
+*.nupkg
+packages/
+.nuget/
+
+## Ef Core Migrations snapshot
+Migrations/
+Migrations/*Designer.cs
+Migrations/*Snapshot.cs
+
+## OS
+.DS_Store
+Thumbs.db
+
+## User-specific files
+*.swp
+*.swo
+
+## Docker
+docker-compose.override.yml
+
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+
+Architecture.txt
+
