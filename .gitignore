@@ -49,7 +49,6 @@ packages/
 .nuget/
 
 ## Ef Core Migrations snapshot
-Migrations/
 Migrations/*Designer.cs
 Migrations/*Snapshot.cs
 

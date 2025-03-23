@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Base.Application.ViewModels;
 using Base.Api.Common;
+using Base.IntegrationTests.Helpers;
 
 namespace Base.IntegrationTests.Auth
 {
@@ -20,42 +21,31 @@ namespace Base.IntegrationTests.Auth
         [Fact]
         public async Task Should_Login_Successfully_And_Return_Token()
         {
-            // Arrange
-            var payload = new
-            {
-                Username = "admin@admin.com",
-                Password = "SenhaForte123!"
-            };
+            var username = "admin@admin2.com";
+            var email = "admin@admin2.com";
+            var password = "SenhaForte123!";
 
-            // Act
-            var response = await _client.PostAsJsonAsync("/api/auth/login", payload);
+            _client.DefaultRequestHeaders.Remove("X-Correlation-ID");
+            _client.DefaultRequestHeaders.Add("X-Correlation-ID", "d9a5a5f2-6a93-4a71-9db9-f74c78e32ec5");
 
-            // DEBUG: mostrar erro se falhar
-            var content = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("🔴 STATUS: " + response.StatusCode);
-            Console.WriteLine("🔴 RESPONSE:");
-            Console.WriteLine(content);
+            await AuthTestHelper.RegisterUserAsync(_client, "Admin", username, email, password);
 
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var token = await AuthTestHelper.LoginAndGetTokenAsync(_client, username, password);
 
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<LoginResponseViewModel>>();
-
-            result.Should().NotBeNull();
-            result!.Data.Should().NotBeNull();
-            result.Data!.Token.Should().NotBeNullOrEmpty();
-
+            token.Should().NotBeNullOrWhiteSpace();
         }
-
 
         [Fact]
         public async Task Should_Return_Unauthorized_With_Wrong_Credentials()
         {
             var payload = new
             {
-                Email = "admin@admin.com",
+                UserName = "admin@admin.com",
                 Password = "senha_errada"
             };
+
+            _client.DefaultRequestHeaders.Remove("X-Correlation-ID");
+            _client.DefaultRequestHeaders.Add("X-Correlation-ID", "d9a5a5f2-6a93-4a71-9db9-f74c78e32ec5");
 
             var response = await _client.PostAsJsonAsync("/api/auth/login", payload);
 

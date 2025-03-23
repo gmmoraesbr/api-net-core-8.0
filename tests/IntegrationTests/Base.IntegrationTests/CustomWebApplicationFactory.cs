@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -12,49 +14,46 @@ namespace Base.IntegrationTests;
 
 public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
 {
+    private SqliteConnection _connection;
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureLogging(logging => logging.ClearProviders());
 
-        builder.UseEnvironment("IntegrationTests"); // Define o nome do ambiente
+        builder.UseEnvironment("IntegrationTests");
 
         builder.ConfigureServices(services =>
         {
-            // Remove qualquer contexto anterior
+            // Remove o contexto anterior
             services.RemoveAll(typeof(DbContextOptions<ApplicationDbContext>));
 
-            // Adiciona contexto em memória
+            // Cria conexão SQLite in-memory e mantém aberta
+            _connection = new SqliteConnection("DataSource=:memory:");
+            _connection.Open();
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseInMemoryDatabase("TestDb");
+                options.UseSqlite(_connection);
             });
 
-            // Registra Identity para permitir resolver UserManager
-            services
-                .AddIdentityCore<User>()
-                .AddRoles<Role>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            // Garante que o banco está criado
+            // Reconstrói o provedor de serviços
             var sp = services.BuildServiceProvider();
+
             using var scope = sp.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
             db.Database.EnsureCreated();
-
-            // Cria a role Admin se não existir
-            if (!roleManager.RoleExistsAsync("Admin").Result)
-            {
-                roleManager.CreateAsync(new Role("Admin")).Wait();
-            }
-
-            var adminUser = User.Create("Moraes", "admin@admin.com", "admin@admin.com");
-            var result = userManager.CreateAsync(adminUser, "SenhaForte123!").Result;
-
-            if (result.Succeeded)
-                userManager.AddToRoleAsync(adminUser, "Admin").Wait();
         });
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        if (_connection is not null)
+        {
+            _connection.Dispose();
+            _connection = null!;
+        }
     }
 }
