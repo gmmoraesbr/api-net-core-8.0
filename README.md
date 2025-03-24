@@ -104,6 +104,11 @@ Acesse o Swagger em:
     PUT	/api/products/{id}	Atualizar produto existente
     DELETE	/api/products/{id}	Remover produto
 
+Observações:
+    É necessário realizar o cadastro de usuário na rota /api/auth/register.
+    Todas as requisições à API exigem o envio do header Authorization: Beare {{token}}.
+    Também é obrigatório incluir o header X-Correlation-ID, utilizando o UUID especificado na chave ExpectedId do arquivo appsettings.json.
+
 🧪 Testes
 ✅ Testes de integração para autenticação implementados.
     Para executar os testes:
