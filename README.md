@@ -103,3 +103,12 @@ Acesse o Swagger em:
     POST	/api/products	Criar novo produto
     PUT	/api/products/{id}	Atualizar produto existente
     DELETE	/api/products/{id}	Remover produto
+
+🧪 Testes
+✅ Testes de integração para autenticação implementados.
+    Para executar os testes:
+        dotnet test
+
+📬 Suporte
+    Dúvidas, sugestões ou problemas?
+    Abra uma (https://github.com/gmmoraesbr/api-net-core-8.0/issues) ou entre em contato. 🚀
